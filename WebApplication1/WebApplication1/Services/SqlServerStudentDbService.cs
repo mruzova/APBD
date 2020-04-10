@@ -27,26 +27,21 @@ namespace WebApplication1.Services
                 com.CommandText = "SELECT * FROM studies WHERE Name=@Name";
                 com.Parameters.AddWithValue("Name", request.Studies);
                 con.Open();
-                SqlTransaction tran = con.BeginTransaction();
-                com.Transaction = tran;
-
+                SqlTransaction transaction = con.BeginTransaction();
+                com.Transaction = transaction;
 
                 var dr = com.ExecuteReader();
-
-
-
                 if (!dr.Read())
                 {
                     dr.Close();
-                    tran.Rollback();
-                    return BadRequest("there is no such study");///...
-                    //ERROR - 404 - Studies does not exists
+                    transaction.Rollback();
+                    return BadRequest("Studies does not exist!");
+                   
                 }
-                //   dr.Close();
-                int idStudy = (int)dr["IdStudy"];
+                int idStudy = (int)dr["idStudy"];
                 dr.Close();
 
-
+                
                 com.CommandText = "SELECT * FROM enrollment WHERE semester = 1 AND idStudy=@idStudy";
                 com.Parameters.AddWithValue("idStudy", idStudy);
                 dr = com.ExecuteReader();
@@ -57,17 +52,17 @@ namespace WebApplication1.Services
                 else
                 {
                     dr.Close();
-                    com.CommandText = "SELECT MAX(idEnrollment) as 'idEnrollment' FROM enrollment";
+                    com.CommandText = "SELECT MAX(idEnrollment) 'idEnrollment' FROM enrollment";
                     dr = com.ExecuteReader();
                     dr.Read();
                     idEnrollment = (int)dr["idEnrollment"] + 1;
                     dr.Close();
                     com.CommandText = "INSERT INTO enrollment  (idEnrollment, Semester, IdStudy, StartDate)  VALUES (@idEnrollment, 1, @idStudy, '" + DateTime.Now + "')";
                     com.Parameters.AddWithValue("idEnrollment", idEnrollment);
-
                     com.ExecuteNonQuery();
                 }
                 dr.Close();
+
 
                 com.CommandText = "SELECT * FROM student WHERE IndexNumber=@IndexNumber";
                 com.Parameters.AddWithValue("IndexNumber", request.IndexNumber);
@@ -75,24 +70,26 @@ namespace WebApplication1.Services
                 if (dr.Read())
                 {
                     dr.Close();
-                    tran.Rollback();
-                    return BadRequest("student with such number already exists");
+                    transaction.Rollback();
+                    return BadRequest("Student with IndexNumber: " + request.IndexNumber + " already exists!");
                 }
                 else
                 {
                     dr.Close();
                     com.CommandText = "INSERT INTO student VALUES (@IndexNumber, @FirstName, @LastName, @BirthDate, @idEnroll)";
+                   // com.Parameters.AddWithValue("sNumber", request.IndexNumber);
                     com.Parameters.AddWithValue("FirstName", request.FirstName);
                     com.Parameters.AddWithValue("LastName", request.LastName);
                     com.Parameters.AddWithValue("BirthDate", request.Birthdate);
                     com.Parameters.AddWithValue("idEnroll", idEnrollment);
                     com.ExecuteNonQuery();
                 }
-                tran.Commit();
+                transaction.Commit();
             }
             //return
             return Ok("New student with index number: " + request.IndexNumber + " is enrolled");
         }
+
 
         public IActionResult PromoteStudents(PromoteStudentRequest request)
         {
