@@ -24,7 +24,7 @@ namespace WebApplication1.Services
             using (var com = new SqlCommand())
             {
                 com.Connection = con;
-                com.CommandText = "SELECT * FROM studies WHERE Name=@Name";
+                com.CommandText = "select * FROM studies WHERE Name=@Name";
                 com.Parameters.AddWithValue("Name", request.Studies);
                 con.Open();
                 SqlTransaction transaction = con.BeginTransaction();
@@ -35,14 +35,14 @@ namespace WebApplication1.Services
                 {
                     dr.Close();
                     transaction.Rollback();
-                    return BadRequest("Studies does not exist!");
+                    return BadRequest("there is no such study");
                    
                 }
                 int idStudy = (int)dr["idStudy"];
                 dr.Close();
 
                 
-                com.CommandText = "SELECT * FROM enrollment WHERE semester = 1 AND idStudy=@idStudy";
+                com.CommandText = "select * From enrollment WHERE semester = 1 AND idStudy=@idStudy";
                 com.Parameters.AddWithValue("idStudy", idStudy);
                 dr = com.ExecuteReader();
                 if (!dr.Read())
@@ -71,13 +71,12 @@ namespace WebApplication1.Services
                 {
                     dr.Close();
                     transaction.Rollback();
-                    return BadRequest("Student with IndexNumber: " + request.IndexNumber + " already exists!");
+                    return BadRequest("there is already a student with such index number");
                 }
                 else
                 {
                     dr.Close();
-                    com.CommandText = "INSERT INTO student VALUES (@IndexNumber, @FirstName, @LastName, @BirthDate, @idEnroll)";
-                   // com.Parameters.AddWithValue("sNumber", request.IndexNumber);
+                    com.CommandText = "insert INTO student values (@IndexNumber, @FirstName, @LastName, @BirthDate, @idEnroll)";
                     com.Parameters.AddWithValue("FirstName", request.FirstName);
                     com.Parameters.AddWithValue("LastName", request.LastName);
                     com.Parameters.AddWithValue("BirthDate", request.Birthdate);
@@ -86,7 +85,7 @@ namespace WebApplication1.Services
                 }
                 transaction.Commit();
             }
-            //return
+            
             return Ok("New student with index number: " + request.IndexNumber + " is enrolled");
         }
 
