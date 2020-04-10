@@ -25,12 +25,12 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult EnrollStudent(EnrollStudentRequest request)
+        public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
-           return _service.EnrollStudent(request);
+           _service.EnrollStudent(request);
 
-            //var response = new EnrollStudentResponse();
-            //return Ok(response);
+            var response = new EnrollStudentResponse();
+            return response;
         }
     
         [HttpPost("promote")]
