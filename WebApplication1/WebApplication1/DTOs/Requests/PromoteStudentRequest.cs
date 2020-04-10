@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApplication1.Models
+namespace WebApplication1.DTOs.Requests
 {
-    public class Enrollment
-
+    public class PromoteStudentRequest
     {
-
-        public int idEnrollment { get; set; }
-        public int IdStudy { get; set; }
         public int Semester { get; set; }
+        public string Name { get; set; }
+
     }
 }
