@@ -7,22 +7,21 @@ using System.Threading.Tasks;
 namespace WebApplication1.DTOs.Requests
 {
     public class EnrollStudentRequest
-    { 
-       // [RegularExpression("^s[0-9]+$")]
+    {
+        // [RegularExpression("^s[0-9]+$")]
+        [Required(ErrorMessage = "You have to provide index number")]
         public string IndexNumber { get; set; }
 
-        [Required]
-        [MaxLength(20)]
+        [Required(ErrorMessage = "You have to provide first name")]
         public string FirstName { get; set; }
 
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage = "You have to provide last name")]
 
         public string LastName { get; set; }
-
+        [Required(ErrorMessage = "You have to provide birthdate")]
         public DateTime Birthdate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You have to provide name of study")]
         public string Studies { get; set; }
     }
 }

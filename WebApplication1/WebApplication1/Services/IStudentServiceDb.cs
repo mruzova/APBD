@@ -11,6 +11,6 @@ namespace WebApplication1.Services
     public interface IStudentServiceDb
     {
         EnrollStudentResponse EnrollStudent(EnrollStudentRequest req);
-        IActionResult PromoteStudents(PromoteStudentRequest req);
+        PromoteStudentResponse PromoteStudents(PromoteStudentRequest req);
     }
 }

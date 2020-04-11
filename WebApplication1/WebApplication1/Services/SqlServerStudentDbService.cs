@@ -40,7 +40,7 @@ namespace WebApplication1.Services
                 {
                     dr.Close();
                     tran.Rollback();
-                    throw new Exception("there is no such study");
+                    throw new InvalidOperationException("there is no such study");
                 }
                 int idStudy = (int)dr["idStudy"];
                 dr.Close();
@@ -75,7 +75,7 @@ namespace WebApplication1.Services
                 {
                     dr.Close();
                     tran.Rollback();
-                    throw new Exception ("there is already a student with such index number");
+                    throw new ArgumentException ("there is already a student with such index number");
                 }
                 else
                 {
@@ -106,9 +106,9 @@ namespace WebApplication1.Services
         }
 
 
-        public IActionResult PromoteStudents(PromoteStudentRequest request)
+        public PromoteStudentResponse PromoteStudents(PromoteStudentRequest request)
         {
-         
+            PromoteStudentResponse response = null;
             using (var con = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18822;Integrated Security=True"))
             {
                 using (SqlCommand com = new SqlCommand())
@@ -132,15 +132,21 @@ namespace WebApplication1.Services
                             request.Name = dr["Name"].ToString();
                             request.Semester = (int)dr["Semester"];
 
-                        
+                        dr = com.ExecuteReader();
+                        dr.Read();
+                        response = new PromoteStudentResponse();
+                        response.Name = dr["Name"].ToString();
+                        response.Semester = (int)dr["Semester"];
+                  
+                        dr.Close();
                     }
                     
 
                     
                 }
             }
-            int sem = request.Semester + 1;
-            return Ok("Students from semester number " + request.Semester + " are now on " + sem + " semester");
+        
+            return response;
         }
     }
 }

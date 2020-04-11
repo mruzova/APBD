@@ -15,7 +15,7 @@ namespace WebApplication1.Services
             throw new NotImplementedException();
         }
 
-        public IActionResult PromoteStudents(PromoteStudentRequest req)
+        public PromoteStudentResponse PromoteStudents(PromoteStudentRequest req)
         {
             throw new NotImplementedException();
         }
