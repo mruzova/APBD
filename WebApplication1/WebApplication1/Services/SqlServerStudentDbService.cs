@@ -86,14 +86,14 @@ namespace WebApplication1.Services
                     com.Parameters.AddWithValue("BirthDate", request.Birthdate);
                     com.Parameters.AddWithValue("idEnr", idEnroll);
                     com.ExecuteNonQuery();
-                    com.CommandText = "SELECT * FROM Enrollment, Student WHERE Semester = 1 and LastName=@LastName";
-                    com.Transaction = tran;
-                    dr = com.ExecuteReader();
-                    dr.Read();
-                    response = new EnrollStudentResponse();
-                    response.Semester = (int)dr["Semester"];
-                    response.LastName = dr["LastName"].ToString();
-                    dr.Close();
+                com.CommandText = "SELECT * FROM Enrollment, Student WHERE Semester = 1 and LastName=@LastName";
+                com.Transaction = tran;
+                dr = com.ExecuteReader();
+                dr.Read();
+                response = new EnrollStudentResponse();
+                response.Semester = (int)dr["Semester"];
+                response.LastName = dr["LastName"].ToString();
+                dr.Close();
                 }
                
                 tran.Commit();
