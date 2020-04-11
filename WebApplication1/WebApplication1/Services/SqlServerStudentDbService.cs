@@ -13,36 +13,40 @@ namespace WebApplication1.Services
     public class SqlServerStudentDbService : ControllerBase, IStudentServiceDb
     {
 
-        int idEnrollment;
+        int idEnroll;
 
 
 
 
-        public IActionResult EnrollStudent(EnrollStudentRequest request)
+        public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
+            EnrollStudentResponse response;
             using (var con = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18822;Integrated Security=True"))
             using (var com = new SqlCommand())
             {
                 com.Connection = con;
-                com.CommandText = "select * FROM studies WHERE Name=@Name";
+                com.CommandText = "SELECT * FROM studies WHERE Name=@Name";
                 com.Parameters.AddWithValue("Name", request.Studies);
                 con.Open();
-                SqlTransaction transaction = con.BeginTransaction();
-                com.Transaction = transaction;
+                SqlTransaction tran = con.BeginTransaction();
+                com.Transaction = tran;
+
 
                 var dr = com.ExecuteReader();
-                if (!dr.Read())
+               
+                   
+                
+                if(!dr.Read())
                 {
                     dr.Close();
-                    transaction.Rollback();
-                    return BadRequest("there is no such study");
-                   
+                    tran.Rollback();
+                    throw new Exception("there is no such study");
                 }
                 int idStudy = (int)dr["idStudy"];
                 dr.Close();
 
                 
-                com.CommandText = "select * From enrollment WHERE semester = 1 AND idStudy=@idStudy";
+                com.CommandText = "SELECT * FROM enrollment WHERE semester = 1 AND idStudy=@idStudy";
                 com.Parameters.AddWithValue("idStudy", idStudy);
                 dr = com.ExecuteReader();
                 if (!dr.Read())
@@ -52,41 +56,53 @@ namespace WebApplication1.Services
                 else
                 {
                     dr.Close();
-                    com.CommandText = "SELECT MAX(idEnrollment) 'idEnrollment' FROM enrollment";
+                    com.CommandText = "SELECT MAX(idEnrollment) as 'idEnrollment' FROM enrollment";
                     dr = com.ExecuteReader();
                     dr.Read();
-                    idEnrollment = (int)dr["idEnrollment"] + 1;
+                    idEnroll = (int)dr["idEnrollment"] + 1;
                     dr.Close();
-                    com.CommandText = "INSERT INTO enrollment  (idEnrollment, Semester, IdStudy, StartDate)  VALUES (@idEnrollment, 1, @idStudy, '" + DateTime.Now + "')";
-                    com.Parameters.AddWithValue("idEnrollment", idEnrollment);
+                    com.CommandText = "INSERT INTO enrollment(idEnrollment, Semester, IdStudy, StartDate)  VALUES (@idEnrollment, 1, @idStudy, '" + DateTime.Now + "')";
+                    com.Parameters.AddWithValue("idEnrollment", idEnroll);
                     com.ExecuteNonQuery();
                 }
                 dr.Close();
 
-
+           
                 com.CommandText = "SELECT * FROM student WHERE IndexNumber=@IndexNumber";
                 com.Parameters.AddWithValue("IndexNumber", request.IndexNumber);
                 dr = com.ExecuteReader();
                 if (dr.Read())
                 {
                     dr.Close();
-                    transaction.Rollback();
-                    return BadRequest("there is already a student with such index number");
+                    tran.Rollback();
+                    throw new Exception ("there is already a student with such index number");
                 }
                 else
                 {
                     dr.Close();
-                    com.CommandText = "insert INTO student values (@IndexNumber, @FirstName, @LastName, @BirthDate, @idEnroll)";
+                    com.CommandText = "INSERT INTO student(indexNumber, firstName,lastName,birthdate, idenrollment) VALUES (@IndexNumber, @FirstName, @LastName, @BirthDate, @idEnr)";
                     com.Parameters.AddWithValue("FirstName", request.FirstName);
                     com.Parameters.AddWithValue("LastName", request.LastName);
                     com.Parameters.AddWithValue("BirthDate", request.Birthdate);
-                    com.Parameters.AddWithValue("idEnroll", idEnrollment);
+                    com.Parameters.AddWithValue("idEnr", idEnroll);
                     com.ExecuteNonQuery();
+                    com.CommandText = "SELECT * FROM Enrollment, Student WHERE Semester = 1 and LastName=@LastName";
+                    com.Transaction = tran;
+                    dr = com.ExecuteReader();
+                    dr.Read();
+                    response = new EnrollStudentResponse();
+                    response.Semester = (int)dr["Semester"];
+                    response.LastName = dr["LastName"].ToString();
+                    dr.Close();
                 }
-                transaction.Commit();
+               
+                tran.Commit();
             }
-            
-            return Ok("New student with index number: " + request.IndexNumber + " is enrolled");
+
+
+           
+
+            return response;
         }
 
 

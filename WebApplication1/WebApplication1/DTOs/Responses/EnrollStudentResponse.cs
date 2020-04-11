@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.DTOs.Responses
 {
-    public class EnrollStudentResponse
+    public class EnrollStudentResponse 
     {
-        public string Semester { get; set; }
+        public int Semester { get; set; }
         public string LastName { get; set; }
     }
 }
