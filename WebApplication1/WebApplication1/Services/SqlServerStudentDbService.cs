@@ -33,10 +33,10 @@ namespace WebApplication1.Services
 
 
                 var dr = com.ExecuteReader();
-               
-                   
-                
-                if(!dr.Read())
+
+
+
+                if (!dr.Read())
                 {
                     dr.Close();
                     tran.Rollback();
@@ -45,8 +45,8 @@ namespace WebApplication1.Services
                 int idStudy = (int)dr["idStudy"];
                 dr.Close();
 
-                
-                com.CommandText = "SELECT * FROM enrollment WHERE semester = 1 AND idStudy=@idStudy";
+
+                com.CommandText = "SELECT max(idenrollment) FROM enrollment WHERE semester = 1 AND idStudy=@idStudy";
                 com.Parameters.AddWithValue("idStudy", idStudy);
                 dr = com.ExecuteReader();
                 if (!dr.Read())
@@ -67,7 +67,7 @@ namespace WebApplication1.Services
                 }
                 dr.Close();
 
-           
+
                 com.CommandText = "SELECT * FROM student WHERE IndexNumber=@IndexNumber";
                 com.Parameters.AddWithValue("IndexNumber", request.IndexNumber);
                 dr = com.ExecuteReader();
@@ -75,7 +75,7 @@ namespace WebApplication1.Services
                 {
                     dr.Close();
                     tran.Rollback();
-                    throw new ArgumentException ("there is already a student with such index number");
+                    throw new ArgumentException("there is already a student with such index number");
                 }
                 else
                 {
@@ -86,21 +86,21 @@ namespace WebApplication1.Services
                     com.Parameters.AddWithValue("BirthDate", request.Birthdate);
                     com.Parameters.AddWithValue("idEnr", idEnroll);
                     com.ExecuteNonQuery();
-                com.CommandText = "SELECT * FROM Enrollment, Student WHERE Semester = 1 and LastName=@LastName";
-                com.Transaction = tran;
-                dr = com.ExecuteReader();
-                dr.Read();
-                response = new EnrollStudentResponse();
-                response.Semester = (int)dr["Semester"];
-                response.LastName = dr["LastName"].ToString();
-                dr.Close();
+                    com.CommandText = "SELECT * FROM Enrollment, Student WHERE Semester = 1 and LastName=@LastName";
+                    com.Transaction = tran;
+                    dr = com.ExecuteReader();
+                    dr.Read();
+                    response = new EnrollStudentResponse();
+                    response.Semester = (int)dr["Semester"];
+                    response.LastName = dr["LastName"].ToString();
+                    dr.Close();
                 }
-               
+
                 tran.Commit();
             }
 
 
-           
+
 
             return response;
         }
@@ -128,26 +128,25 @@ namespace WebApplication1.Services
                         com.CommandText = "PromoteStudent";
                         com.CommandType = System.Data.CommandType.StoredProcedure;
 
-                       
-                            request.Name = dr["Name"].ToString();
-                            request.Semester = (int)dr["Semester"];
+
+                        request.Name = dr["Name"].ToString();
+                        request.Semester = (int)dr["Semester"];
 
                         dr = com.ExecuteReader();
                         dr.Read();
                         response = new PromoteStudentResponse();
                         response.Name = dr["Name"].ToString();
                         response.Semester = (int)dr["Semester"];
-                  
+
                         dr.Close();
                     }
-                    
 
-                    
+
+
                 }
             }
-        
+
             return response;
         }
     }
 }
-
