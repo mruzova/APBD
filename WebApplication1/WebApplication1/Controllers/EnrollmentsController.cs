@@ -47,7 +47,7 @@ namespace WebApplication1.Controllers
         public IActionResult PromoteStudents(PromoteStudentRequest request)
         {
             var response = _service.PromoteStudents(request);
-            return Created("EnrollStudent", response);
+            return Created("PromoteStudents", response);
 
         }
         
