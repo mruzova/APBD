@@ -46,6 +46,7 @@ namespace WebApplication1.Controllers
         [HttpPost("promote")]
         public IActionResult PromoteStudents(PromoteStudentRequest request)
         {
+<<<<<<< HEAD
             try
             {
                 var response = _service.PromoteStudents(request);
@@ -55,6 +56,10 @@ namespace WebApplication1.Controllers
             {
                 return BadRequest("there are no students to promote or no such study");
             }
+=======
+            var response = _service.PromoteStudents(request);
+            return Created("PromoteStudents", response);
+>>>>>>> 458cba8c90ca4a1f04f7d744619d72c995d41c18
 
         }
 
