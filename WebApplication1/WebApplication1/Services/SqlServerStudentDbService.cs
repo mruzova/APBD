@@ -20,6 +20,7 @@ namespace WebApplication1.Services
 
         public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
+            var dateAndTime = DateTime.Now;
             EnrollStudentResponse response;
             using (var con = new SqlConnection("Data Source=db-mssql;Initial Catalog=s18822;Integrated Security=True"))
             using (var com = new SqlCommand())
@@ -61,8 +62,9 @@ namespace WebApplication1.Services
                     dr.Read();
                     idEnroll = (int)dr["idEnrollment"] + 1;
                     dr.Close();
-                    com.CommandText = "INSERT INTO enrollment(idEnrollment, Semester, IdStudy, StartDate)  VALUES (@idEnrollment, 1, @idStudy, '" + DateTime.Now + "')";
+                    com.CommandText = "INSERT INTO enrollment  VALUES (@idEnrollment, 1, @idStudy, '')";
                     com.Parameters.AddWithValue("idEnrollment", idEnroll);
+                    com.Parameters.AddWithValue("StartDate", dateAndTime.ToShortDateString());
                     com.ExecuteNonQuery();
                 }
                 dr.Close();
@@ -99,9 +101,6 @@ namespace WebApplication1.Services
                 tran.Commit();
             }
 
-
-
-
             return response;
         }
 
@@ -125,10 +124,6 @@ namespace WebApplication1.Services
                     if (dr.Read())
                     {
                         dr.Close();
-                        com.CommandText = "PromoteStudent";
-                        com.CommandType = System.Data.CommandType.StoredProcedure;
-
-
                         request.Name = dr["Name"].ToString();
                         request.Semester = (int)dr["Semester"];
 

@@ -23,34 +23,41 @@ namespace WebApplication1.Controllers
         {
             _service = service;
         }
-        
-        [HttpPost(Name ="EnrollStudent")]
+
+        [HttpPost(Name = "EnrollStudent")]
         public IActionResult EnrollStudent(EnrollStudentRequest request)
         {
             try
             {
                 var response = _service.EnrollStudent(request);
-                return Created("EnrollStudent", response); 
+                return Created("EnrollStudent", response);
             }
             catch (InvalidOperationException)
             {
                 return BadRequest("there is no such study");
             }
-            catch (ArgumentException) 
+            catch (ArgumentException)
             {
                 return BadRequest("there is already a student with such index number");
             }
-                
+
         }
 
         [HttpPost("promote")]
         public IActionResult PromoteStudents(PromoteStudentRequest request)
         {
-            var response = _service.PromoteStudents(request);
-            return Created("PromoteStudents", response);
+            try
+            {
+                var response = _service.PromoteStudents(request);
+                return Created("PromoteStudents", response);
+            }
+            catch (SqlException)
+            {
+                return BadRequest("there are no students to promote or no such study");
+            }
 
         }
-        
+
     }
 
 }
