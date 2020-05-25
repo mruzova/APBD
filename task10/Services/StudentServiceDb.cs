@@ -25,6 +25,51 @@ namespace task10.Services
             return students;
         }
 
+        public AddStudentResponse AddStudent(AddStudentRequest request)
+        {
+        
+            var study = _context.Studies.FirstOrDefault(s => s.Name == request.Studies);
+            if (study == null)
+            {
+                throw new Exception("There is no such study");
+            }
+            var enrollment = _context.Enrollment.Where(enr => enr.IdStudy == study.IdStudy && enr.Semester == request.Semester).FirstOrDefault();
+            if (enrollment == null)
+            {
+                enrollment = new Enrollment()
+                {
+                    IdEnrollment = _context.Enrollment.Max(enr => enr.IdEnrollment) + 1,
+                    Semester = request.Semester,
+                    IdStudy = study.IdStudy,
+                    StartDate = DateTime.Now
+                };
+                _context.Enrollment.Add(enrollment);
+            }
+
+            if (_context.Student.FirstOrDefault(s => s.IndexNumber == request.IndexNumber) != null)
+            {
+                throw new Exception("Student with such index number already exists");
+            }
+            var student = new Student()
+            {
+                IndexNumber = request.IndexNumber,
+                BirthDate = request.Birthdate,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                IdEnrollment = enrollment.IdEnrollment
+            };
+            _context.Student.Add(student);
+            var response = new AddStudentResponse()
+            {
+                Semester = enrollment.Semester,
+                LastName = student.LastName,
+                StartDate = enrollment.StartDate
+            };
+            _context.SaveChanges();
+            return response;
+        }
+             
+
         public EnrollStudentResponse EnrollStudent(EnrollStudentRequest request)
         {
             var study = _context.Studies.FirstOrDefault(s => s.Name == request.Studies);

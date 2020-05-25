@@ -17,5 +17,6 @@ namespace task10.Services
          public PromoteStudentResponse PromoteStudents(PromoteStudentRequest request);
          public Student ModifyStudent(ModifyStudentRequest request);
          public Student DeleteStudent(DeleteStudentRequest request);
+        public AddStudentResponse AddStudent(AddStudentRequest request);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using task10.DTOs;
 using task10.DTOs.Requests;
 using task10.Services;
@@ -25,7 +26,9 @@ namespace task10.Controllers
         {
             return Ok(_service.GetStudents());
         }
-        [HttpPost]
+       [Route("modify")]
+       [HttpPost]
+      
         public IActionResult ModifyStudent(ModifyStudentRequest request)
         {
             try
@@ -46,6 +49,21 @@ namespace task10.Controllers
             {
                 var student = _service.DeleteStudent(request);
                 return Ok(student);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [Route("add")]
+        [HttpPost]
+        public IActionResult AddStudent(AddStudentRequest request)
+        {
+            try
+            {
+                var response = _service.AddStudent(request);
+                return Created("AddStudent", response);
 
             }
             catch (Exception e)
