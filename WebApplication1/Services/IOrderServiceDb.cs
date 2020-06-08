@@ -10,6 +10,7 @@ namespace WebApplication1.Services
 {
  public interface IOrderServiceDb
     {
-        public GetOrderResponse GetOrders(GetOrdersRequest request);
+        public GetOrderResponse GetOrders(string surname=null);
+        public AddOrderResponse AddOrder(AddOrderRequest request, int idCustomer);
     }
 }

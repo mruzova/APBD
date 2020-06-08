@@ -10,8 +10,8 @@ using WebApplication1.Models;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(ConfectioneryContext))]
-    [Migration("20200605125651_SeededDataMigration")]
-    partial class SeededDataMigration
+    [Migration("20200608202042_AddedTablesMigration")]
+    partial class AddedTablesMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,22 +44,6 @@ namespace WebApplication1.Migrations
                     b.HasKey("IdConfectionery");
 
                     b.ToTable("Confectionery");
-
-                    b.HasData(
-                        new
-                        {
-                            IdConfectionery = 1,
-                            Name = "ponchik",
-                            PricePerItem = 1.2,
-                            Type = "sladost"
-                        },
-                        new
-                        {
-                            IdConfectionery = 2,
-                            Name = "tortik",
-                            PricePerItem = 2.2000000000000002,
-                            Type = "sladkaya sladost"
-                        });
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Confectionery_Order", b =>
@@ -83,22 +67,6 @@ namespace WebApplication1.Migrations
                     b.HasIndex("IdOrder");
 
                     b.ToTable("Confectionery_Order");
-
-                    b.HasData(
-                        new
-                        {
-                            IdConfectionery = 1,
-                            IdOrder = 1,
-                            Notes = "normik",
-                            Quantity = 3
-                        },
-                        new
-                        {
-                            IdConfectionery = 2,
-                            IdOrder = 2,
-                            Notes = "nu pochti normik",
-                            Quantity = 5
-                        });
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Customer", b =>
@@ -121,20 +89,6 @@ namespace WebApplication1.Migrations
                     b.HasKey("IdCustomer");
 
                     b.ToTable("Customer");
-
-                    b.HasData(
-                        new
-                        {
-                            IdCustomer = 1,
-                            Name = "Jennifer",
-                            Surname = "Day"
-                        },
-                        new
-                        {
-                            IdCustomer = 2,
-                            Name = "Jennifer2",
-                            Surname = "Day2"
-                        });
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Employee", b =>
@@ -157,20 +111,6 @@ namespace WebApplication1.Migrations
                     b.HasKey("IdEmployee");
 
                     b.ToTable("Employee");
-
-                    b.HasData(
-                        new
-                        {
-                            IdEmployee = 1,
-                            Name = "Alex",
-                            Surname = "Way"
-                        },
-                        new
-                        {
-                            IdEmployee = 2,
-                            Name = "Alex2",
-                            Surname = "Way2"
-                        });
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Order", b =>
@@ -204,26 +144,6 @@ namespace WebApplication1.Migrations
                     b.HasIndex("IdEmployee");
 
                     b.ToTable("Order");
-
-                    b.HasData(
-                        new
-                        {
-                            IdOrder = 1,
-                            DateAccepted = new DateTime(2020, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateFinished = new DateTime(2020, 6, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IdCustomer = 1,
-                            IdEmployee = 1,
-                            Notes = "vkusno"
-                        },
-                        new
-                        {
-                            IdOrder = 2,
-                            DateAccepted = new DateTime(2020, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateFinished = new DateTime(2020, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IdCustomer = 2,
-                            IdEmployee = 2,
-                            Notes = "nu ne ochen vkusno"
-                        });
                 });
 
             modelBuilder.Entity("WebApplication1.Models.Confectionery_Order", b =>

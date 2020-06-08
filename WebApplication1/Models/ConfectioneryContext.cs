@@ -50,7 +50,7 @@ namespace WebApplication1.Models
             modelBuilder.Entity<Order>(entity =>
             {
 
-                entity.HasKey(e => e.IdOrder);
+                entity.HasKey(e => e.IdOrder); 
                 entity.Property(p => p.DateAccepted).IsRequired();
                 entity.Property(p => p.DateFinished).IsRequired();
                 entity.Property(p => p.Notes).IsRequired().HasMaxLength(255);

@@ -9,29 +9,31 @@ using WebApplication1.Services;
 
 namespace WebApplication1.Controllers
 {
-    [Route("api/orders")]
+    [Route("api/clients")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class ClientsController : ControllerBase
     {
         private readonly IOrderServiceDb _service;
-        public OrdersController(IOrderServiceDb service)
+        public ClientsController(IOrderServiceDb service)
         {
             _service = service;
         }
 
-        [HttpGet]
 
-        public IActionResult GetOrders(string surname=null)
+
+        [HttpPost("{idCustomer}/orders")]
+        public IActionResult AddOrder(AddOrderRequest request, int idCustomer)
         {
-            try {
-                return Ok(_service.GetOrders(surname));
+            try
+            {
+                var order = _service.AddOrder(request, idCustomer);
+                return Created("AddOrder", order);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            }
-     
+
         }
-    
+    }
 }
