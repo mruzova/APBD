@@ -19,10 +19,16 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
         public IActionResult AddPet(AddPetRequest request)
-        {
-            var pet = _service.AddPet(request);
-            return Created("AddPet", pet);     
-        }
+         try
+            {
+                var pet = _service.AddPet(request);
+                return Created("AddPet", pet);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+          }
         [HttpGet]
         public IActionResult GetPets(string year =null)
         {
