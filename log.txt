@@ -1,7 +1,0 @@
-file does not exist
-the path is incorrect
-the path is incorrect
-The process cannot access the file 'D:\APBD\task2\data.csv' because it is being used by another process.
-The process cannot access the file 'D:\APBD\task2\data.csv' because it is being used by another process.
-The process cannot access the file 'D:\APBD\task2\data.csv' because it is being used by another process.
-The process cannot access the file 'D:\APBD\task2\data.csv' because it is being used by another process.
